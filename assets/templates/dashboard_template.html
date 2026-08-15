@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Scientific Experiment Hub Dashboard</title>
+  <style>
+    :root{--ink:#183247;--muted:#63788a;--navy:#123b5d;--blue:#2b7a9b;--pale:#eaf3f7;--line:#d5e1e8}
+    *{box-sizing:border-box}body{margin:0;background:#f3f6f8;color:var(--ink);font-family:Arial,"Microsoft YaHei",sans-serif}
+    header{background:linear-gradient(120deg,#0f3857,#246d8e);color:white;padding:28px 5vw}header h1{margin:0 0 6px;font-size:28px}header p{margin:0;opacity:.82}
+    main{max-width:1500px;margin:0 auto;padding:24px 4vw 50px}.panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:20px;box-shadow:0 3px 14px #123b5d0b}
+    .filters{display:grid;grid-template-columns:repeat(6,minmax(130px,1fr));gap:12px}.filters label{font-size:12px;color:var(--muted)}select,input{width:100%;margin-top:5px;padding:9px;border:1px solid #bfcdd6;border-radius:6px;background:white;color:var(--ink)}
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:white;border-left:4px solid var(--blue);padding:16px;border-radius:8px;box-shadow:0 2px 10px #123b5d10}.card span{font-size:12px;color:var(--muted)}.card strong{display:block;font-size:24px;margin-top:8px;color:var(--navy)}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}h2{font-size:18px;color:var(--navy);margin:0 0 14px}h3{font-size:14px;color:var(--navy)}
+    table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;background:var(--pale);color:var(--navy);position:sticky;top:0}th,td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}.table-wrap{overflow:auto;max-height:430px}.muted{color:var(--muted)}
+    .pill{display:inline-block;border-radius:999px;padding:3px 8px;background:var(--pale);font-size:11px}
+    canvas{width:100%;height:250px;border:1px solid var(--line);border-radius:7px}.notice{padding:12px;background:#fff7e6;border-left:4px solid #e3a437;color:#705118;font-size:13px}
+    @media(max-width:1100px){.filters{grid-template-columns:repeat(3,1fr)}.cards{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr}}
+    @media(max-width:650px){.filters,.cards{grid-template-columns:1fr 1fr}main{padding:14px}.panel{padding:14px}}
+  </style>
+</head>
+<body>
+<header><h1>Scientific Experiment Hub</h1><p id="generated">实验数据整理与追溯 Dashboard</p></header>
+<main>
+  <section class="panel filters">
+    <label>Project<select id="project"></select></label>
+    <label>Experiment Family<select id="family"></select></label>
+    <label>Experiment Type<select id="type"></select></label>
+    <label>Status<select id="status"></select></label>
+    <label>Date from<input id="dateFrom" type="date"></label>
+    <label>Date to<input id="dateTo" type="date"></label>
+  </section>
+  <section class="cards">
+    <div class="card"><span>Total Experiments</span><strong id="cExperiments">0</strong></div>
+    <div class="card"><span>Total Measurements</span><strong id="cMeasurements">0</strong></div>
+    <div class="card"><span>Experiment Families</span><strong id="cFamilies">0</strong></div>
+    <div class="card"><span>Date Range</span><strong id="cDates" style="font-size:15px">—</strong></div>
+  </section>
+  <div class="grid" style="margin-top:20px">
+    <section class="panel"><h2>Research Trend</h2><canvas id="trend" width="800" height="260"></canvas></section>
+    <section class="panel"><h2>Current Best Result</h2><div class="notice">未配置 Metric_Direction。为避免猜测“越大越好”或“越小越好”，Dashboard 不会自动宣称历史最佳结果。</div><h3>Experiment Family Progress</h3><div id="familyProgress"></div></section>
+  </div>
+  <section class="panel"><h2>Recent Experiments</h2><div class="table-wrap"><table><thead><tr><th>Date</th><th>Experiment ID</th><th>Nature</th><th>Family</th><th>Status</th><th>Outcome</th><th>Organized File</th></tr></thead><tbody id="recentRows"></tbody></table></div></section>
+  <section class="panel"><h2>Experiment Timeline</h2><div class="table-wrap"><table><thead><tr><th>Date</th><th>Experiment</th><th>Outcome / Stage</th></tr></thead><tbody id="timelineRows"></tbody></table></div></section>
+</main>
+<script id="hub-data" type="application/json">{{DATA_JSON}}</script>
+<script>
+const DATA=JSON.parse(document.getElementById('hub-data').textContent);const $=id=>document.getElementById(id);
+const experiments=DATA.experiments||[],summary=DATA.summary||[];
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function unique(field){return [...new Set(experiments.map(x=>String(x[field]??'Unknown')).filter(Boolean))].sort()}
+function fillSelect(id,field){const el=$(id);el.innerHTML='<option value="">All</option>'+unique(field).map(v=>`<option>${esc(v)}</option>`).join('')}
+fillSelect('project','Project_ID');fillSelect('family','Experiment_Family');fillSelect('type','Experiment_Name');fillSelect('status','Status');
+function filtered(){const p=$('project').value,f=$('family').value,t=$('type').value,s=$('status').value,a=$('dateFrom').value,b=$('dateTo').value;return experiments.filter(x=>(!p||String(x.Project_ID)==p)&&(!f||String(x.Experiment_Family)==f)&&(!t||String(x.Experiment_Name)==t)&&(!s||String(x.Status)==s)&&(!a||String(x.Experiment_Date)>=a)&&(!b||String(x.Experiment_Date)<=b))}
+function render(){const rows=filtered(),ids=new Set(rows.map(x=>String(x.Experiment_ID))),measurements=summary.filter(x=>ids.has(String(x.Experiment_ID))).reduce((n,x)=>n+(Number(x.Observed_N)||0),0);const dates=rows.map(x=>String(x.Experiment_Date||'')).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)).sort();
+$('cExperiments').textContent=rows.length;$('cMeasurements').textContent=measurements;$('cFamilies').textContent=new Set(rows.map(x=>x.Experiment_Family)).size;$('cDates').textContent=dates.length?`${dates[0]} → ${dates.at(-1)}`:'Unknown';
+const recent=[...rows].sort((a,b)=>String(b.Experiment_Date).localeCompare(String(a.Experiment_Date))).slice(0,100);$('recentRows').innerHTML=recent.map(x=>`<tr><td>${esc(x.Experiment_Date)}</td><td>${esc(x.Experiment_ID)}</td><td>${esc(x.Experiment_Name)}</td><td>${esc(x.Experiment_Family)}</td><td><span class="pill">${esc(x.Status)}</span></td><td>${esc(x.Outcome)}</td><td>${esc(x.Organized_File)}</td></tr>`).join('')||'<tr><td colspan="7" class="muted">No matching experiments</td></tr>';
+$('timelineRows').innerHTML=recent.map(x=>`<tr><td>${esc(x.Experiment_Date)}</td><td>${esc(x.Experiment_ID)}<br><span class="muted">${esc(x.Experiment_Name)}</span></td><td>${esc(x.Outcome||x.Status)}</td></tr>`).join('');
+const fp={};rows.forEach(x=>{const k=String(x.Experiment_Family||'Unknown');fp[k]=(fp[k]||0)+1});$('familyProgress').innerHTML=Object.entries(fp).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<p><span class="pill">${esc(k)}</span> ${v} experiment(s)</p>`).join('')||'<p class="muted">No family data</p>';drawTrend(rows)}
+function drawTrend(rows){const c=$('trend'),ctx=c.getContext('2d'),counts={};rows.forEach(x=>{const d=String(x.Experiment_Date||'');if(/^\d{4}-\d{2}/.test(d))counts[d.slice(0,7)]=(counts[d.slice(0,7)]||0)+1});const labels=Object.keys(counts).sort(),vals=labels.map(k=>counts[k]);ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);if(!labels.length){ctx.fillStyle='#63788a';ctx.fillText('No dated experiments',30,40);return}const max=Math.max(...vals,1),pad=45,w=c.width-pad*2,h=c.height-pad*2;ctx.strokeStyle='#d5e1e8';ctx.beginPath();ctx.moveTo(pad,20);ctx.lineTo(pad,h+20);ctx.lineTo(c.width-20,h+20);ctx.stroke();ctx.strokeStyle='#2b7a9b';ctx.lineWidth=3;ctx.beginPath();vals.forEach((v,i)=>{const x=pad+(labels.length==1?w/2:i*w/(labels.length-1)),y=20+h-v/max*h;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();ctx.fillStyle='#123b5d';ctx.font='12px Arial';vals.forEach((v,i)=>{const x=pad+(labels.length==1?w/2:i*w/(labels.length-1)),y=20+h-v/max*h;ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.fillText(String(v),x-3,y-10);ctx.save();ctx.translate(x,h+38);ctx.rotate(-.45);ctx.fillText(labels[i],0,0);ctx.restore()})}
+['project','family','type','status','dateFrom','dateTo'].forEach(id=>$(id).addEventListener('change',render));$('generated').textContent=`实验数据整理与追溯 Dashboard · Generated ${DATA.generated_at}`;render();
+</script>
+</body></html>

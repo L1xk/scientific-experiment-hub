@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scientific Experiment Hub"
+  short_description: "Archive, organize, audit, and hand off experiment data"
+  default_prompt: "Use $scientific-experiment-hub to archive and organize this experiment Excel without changing the raw data."
