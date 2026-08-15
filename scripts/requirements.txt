@@ -1,4 +1,4 @@
-openpyxl>=3.1,<4
+openpyxl>=3.1.5,<4
 
 # Optional analysis/visualization companions (not required for core ingestion):
 # numpy>=1.24
