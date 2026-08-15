@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software in research, please cite it using these metadata."
+title: "Scientific Experiment Hub"
+abstract: "A local-first Codex Skill for immutable experiment archiving, organized Excel generation, traceable experiment databases, offline dashboards, and research reporting handoffs."
+authors:
+  - name: "L1xk"
+type: software
+version: 1.0.3
+date-released: "2026-08-15"
+license: MIT
+repository-code: "https://github.com/L1xk/scientific-experiment-hub"
+url: "https://github.com/L1xk/scientific-experiment-hub"
+keywords:
+  - scientific experiments
+  - research data management
+  - Excel
+  - provenance
+  - Codex Skill

@@ -1,0 +1,74 @@
+name: Bug report
+description: Report a reproducible defect using synthetic or fully sanitized data.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a problem. Do not upload real experiment files, databases, dashboards, credentials, or private paths. Use a minimal synthetic example.
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem description
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Raw file archive or provenance
+        - Organized Excel output
+        - Database or incremental update
+        - Validation or conflict handling
+        - Dashboard
+        - Report or analysis handoff
+        - Installation or CLI
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction steps
+      description: List exact commands and use only synthetic or sanitized input.
+      placeholder: |
+        1. Run ...
+        2. Import synthetic workbook ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: "v1.0.3 or commit SHA"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, Python version, openpyxl version, and Codex version if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs or screenshots
+      description: Remove experiment values, file paths, names, emails, tokens, and other sensitive metadata.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Privacy and integrity checks
+      options:
+        - label: I used synthetic or fully sanitized data and removed all credentials and private metadata.
+          required: true
+        - label: I confirmed that this is not a security vulnerability requiring private disclosure.
+          required: true
+        - label: I searched existing issues for the same problem.
+          required: true

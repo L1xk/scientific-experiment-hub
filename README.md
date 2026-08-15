@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)
 ![Codex Skill](https://img.shields.io/badge/Codex-Skill-6f42c1.svg)
+[![Skill validation](https://github.com/L1xk/scientific-experiment-hub/actions/workflows/skill-validation.yml/badge.svg)](https://github.com/L1xk/scientific-experiment-hub/actions/workflows/skill-validation.yml)
 
 一个面向长期科研实验的本地优先 Codex Skill：保存不可变原始文件，把杂乱 Excel 整理成清晰、美观、可追溯的工作簿，并持续维护实验数据库、离线 Dashboard 和阶段报告。
 
@@ -161,6 +162,10 @@ HTML Dashboard 是数据库的离线只读快照，不是数据源。新增实�
 
 ```text
 scientific-experiment-hub/
+├── .github/                # CI、Dependabot 与协作模板
+├── CITATION.cff            # 科研软件引用元数据
+├── CONTRIBUTING.md         # 贡献与本地验证规则
+├── SECURITY.md             # 私密漏洞报告规则
 ├── SKILL.md                 # Codex 执行规范
 ├── agents/openai.yaml       # Skill 展示与默认提示
 ├── assets/templates/        # Excel、Dashboard 和报告模板
@@ -169,6 +174,16 @@ scientific-experiment-hub/
 ```
 
 详细的 Agent 操作规则见 [`SKILL.md`](SKILL.md)。
+
+## 参与贡献与问题反馈
+
+- 普通缺陷或功能建议：使用仓库提供的 GitHub Issue 表单。
+- 提交代码前：阅读 [`CONTRIBUTING.md`](CONTRIBUTING.md)。
+- 安全漏洞：按 [`SECURITY.md`](SECURITY.md) 私密报告，不要创建公开 Issue。
+- 社区互动：遵守 [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)。
+- 在论文、报告或软件中引用本项目：使用 [`CITATION.cff`](CITATION.cff) 中的元数据。
+
+公开 Issue、PR、Actions 日志和仓库历史中不得包含原始实验文件、真实实验结果、内部路径、Dashboard、账号、令牌或其他敏感信息。请使用最小化的合成数据复现问题。
 
 ## 当前边界
 

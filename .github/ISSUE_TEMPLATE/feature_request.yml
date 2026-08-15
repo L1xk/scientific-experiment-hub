@@ -1,0 +1,56 @@
+name: Feature request
+description: Propose an improvement to the experiment organization workflow.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the research workflow problem without including unpublished results, raw experiment data, credentials, or private metadata.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Research workflow problem
+      description: What task is difficult or unreliable today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the desired outcome rather than only a preferred implementation.
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Functional area
+      options:
+        - Excel organization and formatting
+        - Archive and provenance
+        - Database and incremental updates
+        - Experiment Family and historical query
+        - Dashboard
+        - Analysis or report handoff
+        - Installation and portability
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What workaround do you currently use?
+    validations:
+      required: false
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Core constraints
+      options:
+        - label: The proposal preserves immutable raw data and provenance.
+          required: true
+        - label: The proposal does not require guessing missing scientific metadata.
+          required: true
+        - label: This request contains no private experiment data or credentials.
+          required: true

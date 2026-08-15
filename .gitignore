@@ -3,6 +3,25 @@ __pycache__/
 .pytest_cache/
 outputs/
 
+# Prevent accidental publication when a data center or source file is placed
+# in the repository root. Bundled templates under assets/templates stay tracked.
+/Research_Experiment_Database.xlsx
+/实验文件总索引.xlsx
+/运行记录/
+/版本快照/
+/分析交接/
+/Dashboard/
+/报告/
+/20[0-9][0-9]/
+/*.xls
+/*.xlsx
+/*.xlsm
+/*.csv
+/*.tsv
+/*.pdf
+/*.docx
+/*.pptx
+
 .venv/
 venv/
 .env
